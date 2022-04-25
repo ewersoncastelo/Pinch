@@ -11,6 +11,7 @@ struct ContentView: View {
 	// MARK: - PROPERTY
 	@State private var isAnimating: Bool = false
 	@State private var imageSacale: CGFloat = 1
+	@State private var imageOffset: CGSize = CGSize(width: 0, height: 0) //.zero
 	
 	// MARK: - BODY
     var body: some View {
@@ -23,7 +24,9 @@ struct ContentView: View {
 					 .padding()
 					 .shadow(color: .black.opacity(0.4), radius: 12, x: 2, y: 2)
 					 .opacity(isAnimating ? 1: 0)
+					 .offset(x: imageOffset.width, y: imageOffset.height)
 					 .scaleEffect(imageSacale)
+				 // MARK: - TAP GESTURE
 					 .onTapGesture(count: 2) {
 						 if imageSacale == 1 {
 							 withAnimation(.spring()){
@@ -35,6 +38,15 @@ struct ContentView: View {
 							 }
 						 }
 					 }
+				 // MARK: - DRAG GESTURE
+					 .gesture(
+							DragGesture()
+								.onChanged({ value in
+									withAnimation(.linear(duration: 1)){
+										imageOffset = value.translation
+									}
+								})
+					 )
 			 }
 			 .navigationTitle("Pinch e Zoom")
 			 .navigationBarTitleDisplayMode(.inline)
