@@ -13,6 +13,14 @@ struct ContentView: View {
 	@State private var imageSacale: CGFloat = 1
 	@State private var imageOffset: CGSize = CGSize(width: 0, height: 0) //.zero
 	
+	// MARK: - FUNCTIONS
+	func resetImageState() {
+		return withAnimation(.spring()){
+			imageSacale = 1
+			imageOffset = .zero
+		}
+	}
+	
 	// MARK: - BODY
     var body: some View {
 		 NavigationView {
@@ -33,9 +41,7 @@ struct ContentView: View {
 								 imageSacale = 5
 							 }
 						 } else {
-							 withAnimation(.spring()){
-								 imageSacale = 1
-							 }
+							 resetImageState()
 						 }
 					 }
 				 // MARK: - DRAG GESTURE
@@ -46,6 +52,11 @@ struct ContentView: View {
 										imageOffset = value.translation
 									}
 								})
+								.onEnded{ _ in
+									if imageSacale <= 1 {
+										resetImageState()
+									}
+								}
 					 )
 			 }
 			 .navigationTitle("Pinch e Zoom")
